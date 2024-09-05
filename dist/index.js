@@ -41264,13 +41264,24 @@ const Anthropic = __nccwpck_require__(7588);
 
 async function app() {
   try {
-    const token = core.getInput("github-token");
-    const apiKey = core.getInput("api-key");
+    core.info("Starting app function"); // 디버깅 구문
+
+    const token = core.getInput("github-token") || process.env.GITHUB_TOKEN;
+    core.info(`GitHub token retrieved: ${token ? "Yes" : "No"}`); // 디버깅 구문
+
+    const apiKey = core.getInput("api-key") || process.env.ANTHROPIC_API_KEY;
+    core.info(`Anthropic API key retrieved: ${apiKey ? "Yes" : "No"}`); // 디버깅 구문
+
     const octokit = github.getOctokit(token);
     const { context } = github;
+    core.info(`Context received: ${JSON.stringify(context)}`); // 디버깅 구문
+
     const pullRequestNumber = context.payload.pull_request.number;
+    core.info(`Pull Request number: ${pullRequestNumber}`); // 디버깅 구문
+
     const repo = context.repo.repo;
     const owner = context.repo.owner;
+    core.info(`Repository: ${owner}/${repo}`); // 디버깅 구문
 
     // 변경된 파일 목록 가져오기
     const files = await getChangedFiles(
@@ -41279,12 +41290,15 @@ async function app() {
       repo,
       pullRequestNumber
     );
+    core.info(`Changed files: ${files.length} files found`); // 디버깅 구문
 
     // 앤트로픽 API 인스턴스 생성
     const anthropic = createAnthropicInstance(apiKey);
+    core.info("Anthropic instance created"); // 디버깅 구문
 
     // 파일을 순차적으로 리뷰
     for (const file of files) {
+      core.info(`Reviewing file: ${file.filename}`); // 디버깅 구문
       await reviewFile(
         anthropic,
         octokit,
@@ -41301,16 +41315,19 @@ async function app() {
 
 // 변경된 파일 목록을 가져오는 함수
 async function getChangedFiles(octokit, owner, repo, pullRequestNumber) {
+  core.info(`Fetching changed files for PR #${pullRequestNumber}`); // 디버깅 구문
   const { data: files } = await octokit.rest.pulls.listFiles({
     owner,
     repo,
     pull_number: pullRequestNumber,
   });
+  core.info(`Files fetched: ${files.length} files`); // 디버깅 구문
   return files;
 }
 
 // 앤트로픽 API 인스턴스를 생성하는 함수
 function createAnthropicInstance(apiKey) {
+  core.info("Creating Anthropic instance with provided API key"); // 디버깅 구문
   return new Anthropic({
     apiKey: apiKey, // 또는 실제 API 키 입력
   });
@@ -41328,6 +41345,7 @@ async function reviewFile(
   core.info(`Reviewing file: ${file.filename}`);
 
   const reviewMessage = await getReviewMessage(anthropic, file);
+  core.info(`Review message received for ${file.filename}`); // 디버깅 구문
 
   await postReviewComment(
     octokit,
@@ -41337,10 +41355,12 @@ async function reviewFile(
     file,
     reviewMessage
   );
+  core.info(`Review comment posted for ${file.filename}`); // 디버깅 구문
 }
 
 // 리뷰 메시지를 생성하는 함수
 async function getReviewMessage(anthropic, file) {
+  core.info(`Generating review message for file: ${file.filename}`); // 디버깅 구문
   // const message = await anthropic.messages.create({
   //   model: "claude-3-5-sonnet-20240620", // 사용할 클로드 모델
   //   max_tokens: 500, // 응답의 최대 토큰 수
@@ -41355,6 +41375,7 @@ async function getReviewMessage(anthropic, file) {
   // });
   // return JSON.stringify(message.content[0].text);
 
+  core.info(`Returning placeholder review message for ${file.filename}`); // 디버깅 구문
   return "hihihihihi";
 }
 
@@ -41367,6 +41388,7 @@ async function postReviewComment(
   file,
   reviewMessage
 ) {
+  core.info(`Posting review comment for file: ${file.filename}`); // 디버깅 구문
   await octokit.rest.issues.createComment({
     owner,
     repo,
@@ -41383,6 +41405,7 @@ async function postReviewComment(
       ${reviewMessage}
     `,
   });
+  core.info(`Comment posted for file: ${file.filename}`); // 디버깅 구문
 }
 
 app();
