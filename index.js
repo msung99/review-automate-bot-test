@@ -26,8 +26,9 @@ async function run() {
 
     // 리뷰 로직 추가 (예: ESLint로 검사 등)
     files.forEach(async (file) => {
-      const result = await reviewFileWithCloudAPI(file);
+      // const result = await reviewFileWithCloudAPI(file);
       core.info(`Reviewing file: ${file.filename}`);
+      const result = "hihi";
 
       await octokit.rest.issues.createComment({
         owner,
