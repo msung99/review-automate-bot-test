@@ -24,7 +24,7 @@ jobs:
         run: npm install
 
       - name: Pull Request Code Review Bot
-        uses: ./index.js
+        uses: ./dist/index.js
         with:
           github-token: ${{ secrets.GITHUB_TOKEN }}
           api-key: ${{ secrets.ANTHROPIC_API_KEY }}
