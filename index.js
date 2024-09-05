@@ -43,7 +43,7 @@ async function run() {
           {
             role: "user",
             type: "text",
-            text: `Please review the following file and provide suggestions for improvement.\n\nFile Name: ${file.filename}\n\nFile Content:\n\n${file.content}`,
+            content: `Please review the following file and provide suggestions for improvement.\n\nFile Name: ${file.filename}\n\nFile Content:\n\n${file.content}`,
           },
         ],
       });
