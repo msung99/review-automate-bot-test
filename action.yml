@@ -4,6 +4,10 @@ author: "Your Name"
 runs:
   using: "node20"
   main: "index.js"
+branding:
+  color: "blue"
+  icon: "gift"
+  name: "Code Review Bot"
 inputs:
   github-token:
     description: "GitHub token for authentication"
