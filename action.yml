@@ -1,0 +1,10 @@
+name: "Code Review Bot"
+description: "A bot that performs code reviews"
+author: "Your Name"
+runs:
+  using: "node20"
+  main: "index.js"
+inputs:
+  github-token:
+    description: "GitHub token for authentication"
+    required: true
