@@ -49,7 +49,7 @@ async function run() {
             },
           ],
         });
-        return msg;
+        return msg();
       };
 
       await octokit.rest.issues.createComment({
