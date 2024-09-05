@@ -31153,7 +31153,7 @@ var __webpack_exports__ = {};
 (() => {
 const core = __nccwpck_require__(7883);
 const github = __nccwpck_require__(828);
-const reviewFileWithCloudAPI = __nccwpck_require__(2227);
+const { reviewFileWithCloudAPI } = __nccwpck_require__(2227);
 
 async function run() {
   try {
