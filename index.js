@@ -5,6 +5,7 @@ async function run() {
   try {
     // GitHub 토큰 가져오기
     const token = core.getInput("github-token");
+    console.log(`Token: ${token ? "Received" : "Not received"}`);
     const octokit = github.getOctokit(token);
 
     // PR 정보 가져오기
