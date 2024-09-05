@@ -21,24 +21,29 @@ async function run() {
       pull_number: pullRequestNumber,
     });
 
-    // 각 파일을 검사
-    files.forEach((file) => {
-      if (!file.filename.endsWith(".yaml")) {
-        core.info(`Skipping non-JS file: ${file.filename}`);
-        return;
-      }
-
-      // 여기에 코드 리뷰 로직 추가 (예: ESLint로 검사)
-      // 이 예제에서는 간단히 파일명을 출력
+    // 리뷰 로직 추가 (예: ESLint로 검사 등)
+    files.forEach(async (file) => {
+      const result = await reviewFileWithCloudAPI(file);
       core.info(`Reviewing file: ${file.filename}`);
-    });
 
-    // 리뷰 결과에 따라 PR에 댓글 달기
-    await octokit.rest.issues.createComment({
-      owner,
-      repo,
-      issue_number: pullRequestNumber,
-      body: "Code review completed.",
+      await octokit.rest.issues.createComment({
+        owner,
+        repo,
+        issue_number: pullRequestNumber,
+        body: `
+      ### Code Review Completed
+      
+      **Reviewed Code:**
+      
+      \`\`\`${file.language}  // 언어 설정, 예: "javascript", "yaml" 등
+      ${file.content}  // 바뀐 코드 내용
+      \`\`\`
+      
+      **Review Feedback:**
+      
+      ${result}  // 리뷰 피드백 내용
+        `,
+      });
     });
   } catch (error) {
     core.setFailed(error.message);
