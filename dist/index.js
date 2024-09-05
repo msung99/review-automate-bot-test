@@ -41301,6 +41301,7 @@ async function run() {
         system: `review: ${file.filename}`, // 시스템 메시지 설정
         messages: [
           {
+            role: "user",
             type: "text",
             text: `Please review the following file and provide suggestions for improvement.\n\nFile Name: ${file.filename}\n\nFile Content:\n\n${file.content}`,
           },
