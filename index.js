@@ -1,6 +1,8 @@
-const core = require("@actions/core");
-const github = require("@actions/github");
-const { reviewFileWithCloudAPI } = require("./review");
+import core from "@actions/core";
+import github from "@actions/github";
+import { reviewFileWithCloudAPI } from "./review.js";
+
+// 기존 코드와 동일
 
 async function run() {
   try {

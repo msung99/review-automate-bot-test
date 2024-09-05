@@ -1,9 +1,9 @@
-const core = require("@actions/core");
-const axios = require("axios");
-const Anthropic = require("anthropic-ai/sdk");
+import core from "@actions/core";
+import axios from "axios";
+import Anthropic from "@anthropic-ai/sdk";
 
 // 클라우드 API를 사용하여 파일을 리뷰하는 함수
-async function reviewFileWithCloudAPI(file) {
+export default async function reviewFileWithCloudAPI(file) {
   try {
     // defaults to process.env["ANTHROPIC_API_KEY"]);
     const anthropic = new Anthropic();
@@ -33,5 +33,3 @@ async function reviewFileWithCloudAPI(file) {
     return null;
   }
 }
-
-module.exports = { reviewFileWithCloudAPI };

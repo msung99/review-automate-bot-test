@@ -29201,54 +29201,10 @@ function wrappy (fn, cb) {
 
 /***/ }),
 
-/***/ 2227:
-/***/ ((module, __unused_webpack_exports, __nccwpck_require__) => {
-
-const core = __nccwpck_require__(7883);
-const axios = __nccwpck_require__(1796);
-const Anthropic = __nccwpck_require__(4109);
-
-// 클라우드 API를 사용하여 파일을 리뷰하는 함수
-async function reviewFileWithCloudAPI(file) {
-  try {
-    // defaults to process.env["ANTHROPIC_API_KEY"]);
-    const anthropic = new Anthropic();
-
-    const msg = await anthropic.messages.create({
-      model: "claude-3-5-sonnet-20240620", // 사용할 클로드 모델
-      max_tokens: 1000, // 응답의 최대 토큰 수
-      temperature: 0, // 응답의 무작위성
-      system: "Please review the following code file and provide feedback.", // 시스템 메시지 설정
-      messages: [
-        {
-          role: "user",
-          content: [
-            {
-              type: "text",
-              text: `Please review the following file and provide suggestions for improvement.\n\nFile Name: ${file.filename}\n\nFile Content:\n\n${file.content}`,
-            },
-          ],
-        },
-      ],
-    });
-
-    return msg;
-  } catch (error) {
-    core.error(`Failed to review file: ${file.filename}`);
-    core.error(error.message);
-    return null;
-  }
-}
-
-module.exports = { reviewFileWithCloudAPI };
-
-
-/***/ }),
-
-/***/ 4109:
+/***/ 2562:
 /***/ ((module) => {
 
-module.exports = eval("require")("anthropic-ai/sdk");
+module.exports = eval("require")("@anthropic-ai/sdk");
 
 
 /***/ }),
@@ -31143,27 +31099,125 @@ module.exports = parseParams
 /******/ 	}
 /******/ 	
 /************************************************************************/
+/******/ 	/* webpack/runtime/compat get default export */
+/******/ 	(() => {
+/******/ 		// getDefaultExport function for compatibility with non-harmony modules
+/******/ 		__nccwpck_require__.n = (module) => {
+/******/ 			var getter = module && module.__esModule ?
+/******/ 				() => (module['default']) :
+/******/ 				() => (module);
+/******/ 			__nccwpck_require__.d(getter, { a: getter });
+/******/ 			return getter;
+/******/ 		};
+/******/ 	})();
+/******/ 	
+/******/ 	/* webpack/runtime/define property getters */
+/******/ 	(() => {
+/******/ 		// define getter functions for harmony exports
+/******/ 		__nccwpck_require__.d = (exports, definition) => {
+/******/ 			for(var key in definition) {
+/******/ 				if(__nccwpck_require__.o(definition, key) && !__nccwpck_require__.o(exports, key)) {
+/******/ 					Object.defineProperty(exports, key, { enumerable: true, get: definition[key] });
+/******/ 				}
+/******/ 			}
+/******/ 		};
+/******/ 	})();
+/******/ 	
+/******/ 	/* webpack/runtime/hasOwnProperty shorthand */
+/******/ 	(() => {
+/******/ 		__nccwpck_require__.o = (obj, prop) => (Object.prototype.hasOwnProperty.call(obj, prop))
+/******/ 	})();
+/******/ 	
+/******/ 	/* webpack/runtime/make namespace object */
+/******/ 	(() => {
+/******/ 		// define __esModule on exports
+/******/ 		__nccwpck_require__.r = (exports) => {
+/******/ 			if(typeof Symbol !== 'undefined' && Symbol.toStringTag) {
+/******/ 				Object.defineProperty(exports, Symbol.toStringTag, { value: 'Module' });
+/******/ 			}
+/******/ 			Object.defineProperty(exports, '__esModule', { value: true });
+/******/ 		};
+/******/ 	})();
+/******/ 	
 /******/ 	/* webpack/runtime/compat */
 /******/ 	
 /******/ 	if (typeof __nccwpck_require__ !== 'undefined') __nccwpck_require__.ab = __dirname + "/";
 /******/ 	
 /************************************************************************/
 var __webpack_exports__ = {};
-// This entry need to be wrapped in an IIFE because it need to be isolated against other modules in the chunk.
+// This entry need to be wrapped in an IIFE because it need to be in strict mode.
 (() => {
-const core = __nccwpck_require__(7883);
-const github = __nccwpck_require__(828);
-const { reviewFileWithCloudAPI } = __nccwpck_require__(2227);
+"use strict";
+// ESM COMPAT FLAG
+__nccwpck_require__.r(__webpack_exports__);
+
+// NAMESPACE OBJECT: ./review.js
+var review_namespaceObject = {};
+__nccwpck_require__.r(review_namespaceObject);
+
+// EXTERNAL MODULE: ./node_modules/.pnpm/@actions+core@1.10.1/node_modules/@actions/core/lib/core.js
+var lib_core = __nccwpck_require__(7883);
+var core_default = /*#__PURE__*/__nccwpck_require__.n(lib_core);
+// EXTERNAL MODULE: ./node_modules/.pnpm/@actions+github@6.0.0/node_modules/@actions/github/lib/github.js
+var github = __nccwpck_require__(828);
+var github_default = /*#__PURE__*/__nccwpck_require__.n(github);
+// EXTERNAL MODULE: ../../.nvm/versions/node/v20.15.0/lib/node_modules/@vercel/ncc/dist/ncc/@@notfound.js?axios
+var _notfoundaxios = __nccwpck_require__(1796);
+// EXTERNAL MODULE: ../../.nvm/versions/node/v20.15.0/lib/node_modules/@vercel/ncc/dist/ncc/@@notfound.js?@anthropic-ai/sdk
+var sdk = __nccwpck_require__(2562);
+;// CONCATENATED MODULE: ./review.js
+
+
+
+
+// 클라우드 API를 사용하여 파일을 리뷰하는 함수
+async function reviewFileWithCloudAPI(file) {
+  try {
+    // defaults to process.env["ANTHROPIC_API_KEY"]);
+    const anthropic = new Anthropic();
+
+    const msg = await anthropic.messages.create({
+      model: "claude-3-5-sonnet-20240620", // 사용할 클로드 모델
+      max_tokens: 1000, // 응답의 최대 토큰 수
+      temperature: 0, // 응답의 무작위성
+      system: "Please review the following code file and provide feedback.", // 시스템 메시지 설정
+      messages: [
+        {
+          role: "user",
+          content: [
+            {
+              type: "text",
+              text: `Please review the following file and provide suggestions for improvement.\n\nFile Name: ${file.filename}\n\nFile Content:\n\n${file.content}`,
+            },
+          ],
+        },
+      ],
+    });
+
+    return msg;
+  } catch (error) {
+    core.error(`Failed to review file: ${file.filename}`);
+    core.error(error.message);
+    return null;
+  }
+}
+
+;// CONCATENATED MODULE: ./index.js
+
+
+
+
+// 기존 코드와 동일
 
 async function run() {
   try {
     // GitHub 토큰 가져오기
-    const token = core.getInput("github-token");
+    const token = core_default().getInput("github-token");
     console.log(`Token: ${token ? "Received" : "Not received"}`);
-    const octokit = github.getOctokit(token);
+    const octokit = github_default().getOctokit(token);
 
     // PR 정보 가져오기
-    const { context } = github;
+    const { context } = (github_default());
     const pullRequestNumber = context.payload.pull_request.number;
     const repo = context.repo.repo;
     const owner = context.repo.owner;
@@ -31177,8 +31231,8 @@ async function run() {
 
     // 리뷰 로직 추가 (예: ESLint로 검사 등)
     files.forEach(async (file) => {
-      const result = await reviewFileWithCloudAPI(file);
-      core.info(`Reviewing file: ${file.filename}`);
+      const result = await (0,review_namespaceObject.reviewFileWithCloudAPI)(file);
+      core_default().info(`Reviewing file: ${file.filename}`);
 
       await octokit.rest.issues.createComment({
         owner,
@@ -31200,7 +31254,7 @@ async function run() {
       });
     });
   } catch (error) {
-    core.setFailed(error.message);
+    core_default().setFailed(error.message);
   }
 }
 
