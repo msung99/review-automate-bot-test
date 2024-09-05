@@ -1,4 +1,4 @@
-const core = requier("@actions/core");
+const core = require("@actions/core");
 const github = require("@actions/github");
 const Anthropic = require("@anthropic-ai/sdk");
 
@@ -24,26 +24,36 @@ async function run() {
       pull_number: pullRequestNumber,
     });
 
+    const anthropic = new Anthropic();
+    // defaults to process.env["ANTHROPIC_API_KEY"]);
+
     // 리뷰 로직 추가 (예: ESLint로 검사 등)
     files.forEach(async (file) => {
       core.info(`Reviewing file: ${file.filename}`);
 
       const msg = async () => {
-        // defaults to process.env["ANTHROPIC_API_KEY"]);
-        const anthropic = new Anthropic();
         const msg = await anthropic.messages.create({
           model: "claude-3-5-sonnet-20240620", // 사용할 클로드 모델
           max_tokens: 1000, // 응답의 최대 토큰 수
           temperature: 0, // 응답의 무작위성
-          system: "Please review the following code file and provide feedback.", // 시스템 메시지 설정
+          system: `review: ${file.filename}`, // 시스템 메시지 설정
           messages: [
             {
               role: "user",
               content: [
                 {
-                  type: "text",
-                  text: `Please review the following file and provide suggestions for improvement.\n\nFile Name: ${file.filename}\n\nFile Content:\n\n${file.content}`,
+                  role: "system",
+                  content:
+                    "You are a senior developer. You review the code of junior developers. You review the code using Banksalad's pn rule.",
                 },
+                {
+                  role: "user",
+                  content: `Please review the following file and provide suggestions for improvement.\n\nFile Name: ${file.filename}\n\nFile Content:\n\n${file.content}`,
+                },
+                // {
+                //   role: "assistant",
+                //   content: "",
+                // },
               ],
             },
           ],
