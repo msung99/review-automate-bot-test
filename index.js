@@ -39,22 +39,13 @@ async function run() {
           system: `review: ${file.filename}`, // 시스템 메시지 설정
           messages: [
             {
+              role: "system",
+              content:
+                "You are a senior developer. You review the code of junior developers. You review the code using Banksalad's pn rule.",
+            },
+            {
               role: "user",
-              content: [
-                {
-                  role: "system",
-                  content:
-                    "You are a senior developer. You review the code of junior developers. You review the code using Banksalad's pn rule.",
-                },
-                {
-                  role: "user",
-                  content: `Please review the following file and provide suggestions for improvement.\n\nFile Name: ${file.filename}\n\nFile Content:\n\n${file.content}`,
-                },
-                // {
-                //   role: "assistant",
-                //   content: "",
-                // },
-              ],
+              content: `Please review the following file and provide suggestions for improvement.\n\nFile Name: ${file.filename}\n\nFile Content:\n\n${file.content}`,
             },
           ],
         });
@@ -70,8 +61,8 @@ async function run() {
       
       **Reviewed Code:**
       
-      \`\`\`${file.language}  // 언어 설정, 예: "javascript", "yaml" 등
-      ${file.content}  // 바뀐 코드 내용
+      \`\`\`${file.language || "plaintext"}
+      ${file.content}
       \`\`\`
       
       **Review Feedback:**
