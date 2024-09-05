@@ -29209,14 +29209,6 @@ module.exports = eval("require")("@anthropic-ai/sdk");
 
 /***/ }),
 
-/***/ 1796:
-/***/ ((module) => {
-
-module.exports = eval("require")("axios");
-
-
-/***/ }),
-
 /***/ 9491:
 /***/ ((module) => {
 
@@ -31161,12 +31153,9 @@ var core_default = /*#__PURE__*/__nccwpck_require__.n(lib_core);
 // EXTERNAL MODULE: ./node_modules/.pnpm/@actions+github@6.0.0/node_modules/@actions/github/lib/github.js
 var github = __nccwpck_require__(828);
 var github_default = /*#__PURE__*/__nccwpck_require__.n(github);
-// EXTERNAL MODULE: ../../.nvm/versions/node/v20.15.0/lib/node_modules/@vercel/ncc/dist/ncc/@@notfound.js?axios
-var _notfoundaxios = __nccwpck_require__(1796);
 // EXTERNAL MODULE: ../../.nvm/versions/node/v20.15.0/lib/node_modules/@vercel/ncc/dist/ncc/@@notfound.js?@anthropic-ai/sdk
 var sdk = __nccwpck_require__(2562);
 ;// CONCATENATED MODULE: ./review.js
-
 
 
 

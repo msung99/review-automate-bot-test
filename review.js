@@ -1,5 +1,4 @@
 import core from "@actions/core";
-import axios from "axios";
 import Anthropic from "@anthropic-ai/sdk";
 
 // 클라우드 API를 사용하여 파일을 리뷰하는 함수
