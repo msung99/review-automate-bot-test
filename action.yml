@@ -1,4 +1,4 @@
-name: "Code Review Bot"
+name: "Pull Request Code Review Bot"
 description: "A bot that performs code reviews"
 author: "Your Name"
 runs:

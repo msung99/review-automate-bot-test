@@ -1,0 +1,31 @@
+name: Code Review
+
+on:
+  pull_request:
+    branches:
+      - main
+
+jobs:
+  review:
+    runs-on: ubuntu-latest
+
+    steps:
+      # 코드 체크아웃
+      - name: Checkout code
+        uses: actions/checkout@v2
+
+      # Node.js 환경 설정
+      - name: Set up Node.js
+        uses: actions/setup-node@v2
+        with:
+          node-version: "20"
+
+      # 프로젝트 의존성 설치
+      - name: Install dependencies
+        run: npm install
+
+      # 코드 리뷰 봇 실행
+      - name: Run Code Review Bot
+        run: npm run review
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
