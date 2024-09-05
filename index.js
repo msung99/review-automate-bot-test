@@ -48,7 +48,7 @@ async function run() {
       });
 
       // json에서 리뷰 메세지 추출
-      const reviewMessage = message.content[0].text;
+      const reviewMessage = JSON.stringify(msg.content[0].text);
 
       // 액션 콘솔에 출력
       core.info(reviewMessage);
