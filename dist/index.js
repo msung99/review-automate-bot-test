@@ -26884,7 +26884,6 @@ async function reviewFileWithCloudAPI(file) {
   try {
     // defaults to process.env["ANTHROPIC_API_KEY"]);
     const anthropic = new (_anthropic_ai_sdk__WEBPACK_IMPORTED_MODULE_1___default())();
-
     const msg = await anthropic.messages.create({
       model: "claude-3-5-sonnet-20240620", // 사용할 클로드 모델
       max_tokens: 1000, // 응답의 최대 토큰 수

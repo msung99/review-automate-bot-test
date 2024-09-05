@@ -1,6 +1,6 @@
-import core from "@actions/core";
-import github from "@actions/github";
-import { reviewFileWithCloudAPI } from "./review.js";
+const core = requier("@actions/core");
+const github = require("@actions/github");
+const Anthropic = require("@anthropic-ai/sdk");
 
 // 기존 코드와 동일
 
@@ -26,9 +26,30 @@ async function run() {
 
     // 리뷰 로직 추가 (예: ESLint로 검사 등)
     files.forEach(async (file) => {
-      // const result = await reviewFileWithCloudAPI(file);
       core.info(`Reviewing file: ${file.filename}`);
-      const result = "hihi";
+
+      const msg = async () => {
+        // defaults to process.env["ANTHROPIC_API_KEY"]);
+        const anthropic = new Anthropic();
+        const msg = await anthropic.messages.create({
+          model: "claude-3-5-sonnet-20240620", // 사용할 클로드 모델
+          max_tokens: 1000, // 응답의 최대 토큰 수
+          temperature: 0, // 응답의 무작위성
+          system: "Please review the following code file and provide feedback.", // 시스템 메시지 설정
+          messages: [
+            {
+              role: "user",
+              content: [
+                {
+                  type: "text",
+                  text: `Please review the following file and provide suggestions for improvement.\n\nFile Name: ${file.filename}\n\nFile Content:\n\n${file.content}`,
+                },
+              ],
+            },
+          ],
+        });
+        return msg;
+      };
 
       await octokit.rest.issues.createComment({
         owner,
@@ -45,7 +66,7 @@ async function run() {
       
       **Review Feedback:**
       
-      ${result}  // 리뷰 피드백 내용
+      ${msg}  // 리뷰 피드백 내용
         `,
       });
     });
