@@ -42,7 +42,6 @@ async function run() {
         messages: [
           {
             role: "user",
-            type: "text",
             content: `Please review the following file and provide suggestions for improvement.\n\nFile Name: ${file.filename}\n\nFile Content:\n\n${file.content}`,
           },
         ],
