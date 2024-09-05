@@ -34,7 +34,7 @@ async function run() {
     files.forEach(async (file) => {
       core.info(`Reviewing file: ${file.filename}`);
 
-      const msg = await anthropic.messages.create({
+      const message = await anthropic.messages.create({
         model: "claude-3-5-sonnet-20240620", // 사용할 클로드 모델
         max_tokens: 1000, // 응답의 최대 토큰 수
         temperature: 0, // 응답의 무작위성
@@ -47,7 +47,11 @@ async function run() {
         ],
       });
 
-      core.info(msg);
+      // json에서 리뷰 메세지 추출
+      const reviewMessage = message.content[0].text;
+
+      // 액션 콘솔에 출력
+      core.info(reviewMessage);
 
       await octokit.rest.issues.createComment({
         owner,
@@ -64,7 +68,7 @@ async function run() {
       
       **Review Feedback:**
       
-      ${msg}  // 리뷰 피드백 내용
+      ${reviewMessage}  // 리뷰 피드백 내용
         `,
       });
     });
