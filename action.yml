@@ -12,3 +12,6 @@ inputs:
   github-token:
     description: "GitHub token for authentication"
     required: true
+  api-key:
+    description: "API key for the code review bot"
+    required: true

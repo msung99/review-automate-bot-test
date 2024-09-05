@@ -41268,6 +41268,7 @@ async function run() {
   try {
     // GitHub 토큰 가져오기
     const token = core.getInput("github-token");
+    const apiKey = core.getInput("api-key");
     console.log(`Token: ${token ? "Received" : "Not received"}`);
     const octokit = github.getOctokit(token);
 
@@ -41284,8 +41285,10 @@ async function run() {
       pull_number: pullRequestNumber,
     });
 
-    const anthropic = new Anthropic();
     // defaults to process.env["ANTHROPIC_API_KEY"]);
+    const anthropic = new Anthropic({
+      apiKey: apiKey, // 또는 실제 API 키를 여기에 입력
+    });
 
     // 리뷰 로직 추가 (예: ESLint로 검사 등)
     files.forEach(async (file) => {
