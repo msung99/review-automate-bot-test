@@ -1,3 +1,7 @@
+const core = require("@actions/core");
+const github = require("@actions/github");
+const Anthropic = require("@anthropic-ai/sdk");
+
 async function app() {
   try {
     const token = core.getInput("github-token");
@@ -77,20 +81,21 @@ async function reviewFile(
 
 // 리뷰 메시지를 생성하는 함수
 async function getReviewMessage(anthropic, file) {
-  const message = await anthropic.messages.create({
-    model: "claude-3-5-sonnet-20240620", // 사용할 클로드 모델
-    max_tokens: 500, // 응답의 최대 토큰 수
-    temperature: 0, // 응답의 무작위성
-    system: `review: ${file.filename}`, // 시스템 메시지 설정
-    messages: [
-      {
-        role: "user",
-        content: `Please review the following file and provide suggestions for improvement. Advice should be no more than 5 lines and 100 characters. \n\nFile Name:Please review the following file and provide suggestions for improvement.\n\nFile Name:  ${file.filename}\n\nFile Content:\n\n${file.content}`,
-      },
-    ],
-  });
+  // const message = await anthropic.messages.create({
+  //   model: "claude-3-5-sonnet-20240620", // 사용할 클로드 모델
+  //   max_tokens: 500, // 응답의 최대 토큰 수
+  //   temperature: 0, // 응답의 무작위성
+  //   system: `review: ${file.filename}`, // 시스템 메시지 설정
+  //   messages: [
+  //     {
+  //       role: "user",
+  //       content: `Please review the following file and provide suggestions for improvement. Advice should be no more than 5 lines and 100 characters. \n\nFile Name:Please review the following file and provide suggestions for improvement.\n\nFile Name:  ${file.filename}\n\nFile Content:\n\n${file.content}`,
+  //     },
+  //   ],
+  // });
+  // return JSON.stringify(message.content[0].text);
 
-  return JSON.stringify(message.content[0].text);
+  return "hihihihihi";
 }
 
 // 리뷰 코멘트를 PR에 게시하는 함수
