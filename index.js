@@ -69,7 +69,6 @@ async function getChangedFiles(octokit, owner, repo, pullRequestNumber) {
     pull_number: pullRequestNumber,
   });
   core.info(`Files fetched: ${files.length} files`); // 디버깅 구문
-  core.info(`Files: ${JSON.stringify(files)}`); // 디버깅 구문
   return files;
 }
 
