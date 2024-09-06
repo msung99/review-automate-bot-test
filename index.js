@@ -37,7 +37,6 @@ async function app() {
 
     // 파일을 순차적으로 리뷰
     for (const file of files) {
-      core.info(`Reviewing file: ${file.filename}`); // 디버깅 구문
       await reviewFile(anthropic, octokit, owner, repo, pullRequestNumber, file);
     }
   } catch (error) {
@@ -109,7 +108,7 @@ async function getReviewMessage(anthropic, filename, fileContent) {
     messages: [
       {
         role: "user",
-        content: `Please review the following file and provide suggestions for improvement. Advice should be no more than 5 lines and 100 characters. \n\nFile Name:Please review the following file and provide suggestions for improvement.\n\nFile Name:  ${file.filename}\n\nFile Content:\n\n${fileContent}`,
+        content: `Please review the following file and provide suggestions for improvement. Advice should be no more than 5 lines and 100 characters. \n\nFile Name:Please review the following file and provide suggestions for improvement.\n\nFile Name:  ${filename}\n\nFile Content:\n\n${fileContent}`,
       },
     ],
   });
