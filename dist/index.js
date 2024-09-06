@@ -41299,7 +41299,6 @@ async function app() {
     // 파일을 순차적으로 리뷰
     for (const file of files) {
       core.info(`Reviewing file: ${file.filename}`); // 디버깅 구문
-      core.info(`file content ${file.content}`);
       await reviewFile(
         anthropic,
         octokit,
@@ -41312,6 +41311,18 @@ async function app() {
   } catch (error) {
     core.setFailed(error.message);
   }
+}
+
+// 파일의 실제 콘텐츠를 가져오는 함수
+async function getFileContent(octokit, owner, repo, fileSha) {
+  const { data } = await octokit.rest.repos.getContent({
+    owner,
+    repo,
+    path: fileSha,
+  });
+
+  // content는 base64로 인코딩되어 있으므로 디코딩 필요
+  return Buffer.from(data.content, "base64").toString("utf-8");
 }
 
 // 변경된 파일 목록을 가져오는 함수
@@ -41345,7 +41356,14 @@ async function reviewFile(
 ) {
   core.info(`Reviewing file: ${file.filename}`);
 
-  const reviewMessage = await getReviewMessage(anthropic, file);
+  const fileContent = await getFileContent(octokit, owner, repo, file.filename);
+  core.info(`file content: ${fileContent}`);
+
+  const reviewMessage = await getReviewMessage(
+    anthropic,
+    file.filename,
+    fileContent
+  );
   core.info(`Review message received for ${file.filename}`); // 디버깅 구문
 
   await postReviewComment(
@@ -41360,18 +41378,16 @@ async function reviewFile(
 }
 
 // 리뷰 메시지를 생성하는 함수
-async function getReviewMessage(anthropic, file) {
-  core.info(`Generating review message for file: ${file.filename}`); // 디버깅 구문
-
+async function getReviewMessage(anthropic, filename, fileContent) {
   // const message = await anthropic.messages.create({
   //   model: "claude-3-5-sonnet-20240620", // 사용할 클로드 모델
   //   max_tokens: 500, // 응답의 최대 토큰 수
   //   temperature: 0, // 응답의 무작위성
-  //   system: `review: ${file.filename}`, // 시스템 메시지 설정
+  //   system: `review: ${filename}`, // 시스템 메시지 설정
   //   messages: [
   //     {
   //       role: "user",
-  //       content: `Please review the following file and provide suggestions for improvement. Advice should be no more than 5 lines and 100 characters. \n\nFile Name:Please review the following file and provide suggestions for improvement.\n\nFile Name:  ${file.filename}\n\nFile Content:\n\n${file.content}`,
+  //       content: `Please review the following file and provide suggestions for improvement. Advice should be no more than 5 lines and 100 characters. \n\nFile Name:Please review the following file and provide suggestions for improvement.\n\nFile Name:  ${file.filename}\n\nFile Content:\n\n${fileContent}`,
   //     },
   //   ],
   // });
