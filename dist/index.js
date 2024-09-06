@@ -41372,7 +41372,7 @@ async function getReviewMessage(anthropic, filename, fileContent) {
       },
     ],
   });
-  return JSON.stringify(message.content[0].text);
+  return JSON.parse(JSON.stringify(message.content[0].text));
 }
 
 // 리뷰 코멘트를 PR에 게시하는 함수
