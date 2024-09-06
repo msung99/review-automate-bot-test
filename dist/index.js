@@ -41284,12 +41284,7 @@ async function app() {
     core.info(`Repository: ${owner}/${repo}`); // 디버깅 구문
 
     // 변경된 파일 목록 가져오기
-    const files = await getChangedFiles(
-      octokit,
-      owner,
-      repo,
-      pullRequestNumber
-    );
+    const files = await getChangedFiles(octokit, owner, repo, pullRequestNumber);
     core.info(`Changed files: ${files.length} files found`); // 디버깅 구문
 
     // 앤트로픽 API 인스턴스 생성
@@ -41299,14 +41294,7 @@ async function app() {
     // 파일을 순차적으로 리뷰
     for (const file of files) {
       core.info(`Reviewing file: ${file.filename}`); // 디버깅 구문
-      await reviewFile(
-        anthropic,
-        octokit,
-        owner,
-        repo,
-        pullRequestNumber,
-        file
-      );
+      await reviewFile(anthropic, octokit, owner, repo, pullRequestNumber, file);
     }
   } catch (error) {
     core.setFailed(error.message);
@@ -41314,15 +41302,18 @@ async function app() {
 }
 
 // 파일의 실제 콘텐츠를 가져오는 함수
-async function getFileContent(octokit, owner, repo, fileSha) {
-  const { data } = await octokit.rest.repos.getContent({
-    owner,
-    repo,
-    path: fileSha,
-  });
-
-  // content는 base64로 인코딩되어 있으므로 디코딩 필요
-  return Buffer.from(data.content, "base64").toString("utf-8");
+async function getFileContent(octokit, owner, repo, filePath) {
+  try {
+    const { data } = await octokit.rest.repos.getContent({
+      owner,
+      repo,
+      path: filePath,
+    });
+    return Buffer.from(data.content, "base64").toString("utf-8");
+  } catch (error) {
+    console.error(`Error fetching file content for ${filePath}: ${error.message}`);
+    throw error;
+  }
 }
 
 // 변경된 파일 목록을 가져오는 함수
@@ -41346,34 +41337,16 @@ function createAnthropicInstance(apiKey) {
 }
 
 // 파일을 리뷰하는 함수
-async function reviewFile(
-  anthropic,
-  octokit,
-  owner,
-  repo,
-  pullRequestNumber,
-  file
-) {
+async function reviewFile(anthropic, octokit, owner, repo, pullRequestNumber, file) {
   core.info(`Reviewing file: ${file.filename}`);
 
   const fileContent = await getFileContent(octokit, owner, repo, file.filename);
   core.info(`file content: ${fileContent}`);
 
-  const reviewMessage = await getReviewMessage(
-    anthropic,
-    file.filename,
-    fileContent
-  );
+  const reviewMessage = await getReviewMessage(anthropic, file.filename, fileContent);
   core.info(`Review message received for ${file.filename}`); // 디버깅 구문
 
-  await postReviewComment(
-    octokit,
-    owner,
-    repo,
-    pullRequestNumber,
-    file,
-    reviewMessage
-  );
+  await postReviewComment(octokit, owner, repo, pullRequestNumber, file, reviewMessage);
   core.info(`Review comment posted for ${file.filename}`); // 디버깅 구문
 }
 
@@ -41395,14 +41368,7 @@ async function getReviewMessage(anthropic, filename, fileContent) {
 }
 
 // 리뷰 코멘트를 PR에 게시하는 함수
-async function postReviewComment(
-  octokit,
-  owner,
-  repo,
-  pullRequestNumber,
-  file,
-  reviewMessage
-) {
+async function postReviewComment(octokit, owner, repo, pullRequestNumber, file, reviewMessage) {
   core.info(`Posting review comment for file: ${file.filename}`); // 디버깅 구문
   await octokit.rest.issues.createComment({
     owner,
