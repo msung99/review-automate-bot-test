@@ -86,31 +86,34 @@ function createAnthropicInstance(apiKey) {
 async function reviewFile(anthropic, octokit, owner, repo, pullRequestNumber, file) {
   core.info(`Reviewing file: ${file.filename}`);
 
+  // 파일 정보 불러오기
   const fileContent = await getFileContent(octokit, owner, repo, file.filename);
   core.info(`file content: ${fileContent}`);
 
+  // 리뷰를 요청
   const reviewMessage = await getReviewMessage(anthropic, file.filename, fileContent);
-  core.info(`Review message received for ${file.filename}`); // 디버깅 구문
+  core.info(`Review message received for ${file.filename}`);
 
+  // 리뷰 코멘트를 PR에 게시
   await postReviewComment(octokit, owner, repo, pullRequestNumber, file, reviewMessage);
-  core.info(`Review comment posted for ${file.filename}`); // 디버깅 구문
+  core.info(`Review comment posted for ${file.filename}`);
 }
 
 // 리뷰 메시지를 생성하는 함수
 async function getReviewMessage(anthropic, filename, fileContent) {
-  // const message = await anthropic.messages.create({
-  //   model: "claude-3-5-sonnet-20240620", // 사용할 클로드 모델
-  //   max_tokens: 500, // 응답의 최대 토큰 수
-  //   temperature: 0, // 응답의 무작위성
-  //   system: `review: ${filename}`, // 시스템 메시지 설정
-  //   messages: [
-  //     {
-  //       role: "user",
-  //       content: `Please review the following file and provide suggestions for improvement. Advice should be no more than 5 lines and 100 characters. \n\nFile Name:Please review the following file and provide suggestions for improvement.\n\nFile Name:  ${file.filename}\n\nFile Content:\n\n${fileContent}`,
-  //     },
-  //   ],
-  // });
-  // return JSON.stringify(message.content[0].text);
+  const message = await anthropic.messages.create({
+    model: "claude-3-5-sonnet-20240620", // 사용할 클로드 모델
+    max_tokens: 500, // 응답의 최대 토큰 수
+    temperature: 0, // 응답의 무작위성
+    system: `review: ${filename}`, // 시스템 메시지 설정
+    messages: [
+      {
+        role: "user",
+        content: `Please review the following file and provide suggestions for improvement. Advice should be no more than 5 lines and 100 characters. \n\nFile Name:Please review the following file and provide suggestions for improvement.\n\nFile Name:  ${file.filename}\n\nFile Content:\n\n${fileContent}`,
+      },
+    ],
+  });
+  return JSON.stringify(message.content[0].text);
 }
 
 // 리뷰 코멘트를 PR에 게시하는 함수
@@ -123,10 +126,6 @@ async function postReviewComment(octokit, owner, repo, pullRequestNumber, file, 
     body: `
       Code Review Completed
 
-      \`\`\`${file.language || "plaintext"}
-      ${file.content}
-      \`\`\`
-      
       Review Feedback
       
       ${reviewMessage}
