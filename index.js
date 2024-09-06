@@ -84,6 +84,7 @@ async function reviewFile(
 ) {
   core.info(`Reviewing file: ${file.filename}`);
 
+  // const reviewMessage = 'testtest';
   const reviewMessage = await getReviewMessage(anthropic, file);
   core.info(`Review message received for ${file.filename}`); // 디버깅 구문
 
@@ -101,22 +102,19 @@ async function reviewFile(
 // 리뷰 메시지를 생성하는 함수
 async function getReviewMessage(anthropic, file) {
   core.info(`Generating review message for file: ${file.filename}`); // 디버깅 구문
-  // const message = await anthropic.messages.create({
-  //   model: "claude-3-5-sonnet-20240620", // 사용할 클로드 모델
-  //   max_tokens: 500, // 응답의 최대 토큰 수
-  //   temperature: 0, // 응답의 무작위성
-  //   system: `review: ${file.filename}`, // 시스템 메시지 설정
-  //   messages: [
-  //     {
-  //       role: "user",
-  //       content: `Please review the following file and provide suggestions for improvement. Advice should be no more than 5 lines and 100 characters. \n\nFile Name:Please review the following file and provide suggestions for improvement.\n\nFile Name:  ${file.filename}\n\nFile Content:\n\n${file.content}`,
-  //     },
-  //   ],
-  // });
-  // return JSON.stringify(message.content[0].text);
-
-  core.info(`Returning placeholder review message for ${file.filename}`); // 디버깅 구문
-  return "hihihihihi";
+  const message = await anthropic.messages.create({
+    model: "claude-3-5-sonnet-20240620", // 사용할 클로드 모델
+    max_tokens: 500, // 응답의 최대 토큰 수
+    temperature: 0, // 응답의 무작위성
+    system: `review: ${file.filename}`, // 시스템 메시지 설정
+    messages: [
+      {
+        role: "user",
+        content: `Please review the following file and provide suggestions for improvement. Advice should be no more than 5 lines and 100 characters. \n\nFile Name:Please review the following file and provide suggestions for improvement.\n\nFile Name:  ${file.filename}\n\nFile Content:\n\n${file.content}`,
+      },
+    ],
+  });
+  return JSON.stringify(message.content[0].text);
 }
 
 // 리뷰 코멘트를 PR에 게시하는 함수
