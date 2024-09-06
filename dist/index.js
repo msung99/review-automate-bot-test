@@ -41269,19 +41269,23 @@ async function app() {
     const token = core.getInput("github-token") || process.env.GITHUB_TOKEN;
     core.info(`GitHub token retrieved: ${token ? "Yes" : "No"}`); // 디버깅 구문
 
+    // 앤트로픽 API 키 가져오기
     const apiKey = core.getInput("api-key") || process.env.ANTHROPIC_API_KEY;
     core.info(`Anthropic API key retrieved: ${apiKey ? "Yes" : "No"}`); // 디버깅 구문
 
+    // GitHub API 인스턴스 생성
     const octokit = github.getOctokit(token);
     const { context } = github;
-    core.info(`Context received: ${JSON.stringify(context)}`); // 디버깅 구문
+    core.info(`Context received`); // 디버깅 구문
 
+    // PR 번호 가져오기
     const pullRequestNumber = context.payload.pull_request.number;
-    core.info(`Pull Request number: ${pullRequestNumber}`); // 디버깅 구문
+    core.info(`Pull Request number: ${pullRequestNumber}`);
 
+    // 레포지토리 정보 가져오기
     const repo = context.repo.repo;
     const owner = context.repo.owner;
-    core.info(`Repository: ${owner}/${repo}`); // 디버깅 구문
+    core.info(`Repository: ${owner}/${repo}`);
 
     // 변경된 파일 목록 가져오기
     const files = await getChangedFiles(octokit, owner, repo, pullRequestNumber);
@@ -41308,6 +41312,7 @@ async function getFileContent(octokit, owner, repo, filePath) {
       owner,
       repo,
       path: filePath,
+      ref: github.context.payload.pull_request.head.ref,
     });
     return Buffer.from(data.content, "base64").toString("utf-8");
   } catch (error) {
